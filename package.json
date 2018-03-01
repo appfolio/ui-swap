@@ -13,6 +13,7 @@
     "babel-preset-env": "^1.6.1"
   },
   "scripts": {
-    "test": "ava"
+    "test": "ava",
+    "build": "babel index.js -d dist"
   }
 }

@@ -1,0 +1,10 @@
+{
+  "name": "ui-swap",
+  "version": "0.1.0",
+  "description": "Swap your UI or frontend with ease",
+  "main": "index.js",
+  "repository": "https://github.com/aaronpanch/ui-swap.git",
+  "author": "Aaron Panchal <aaron.panchal@gmail.com>",
+  "license": "MIT",
+  "private": false
+}

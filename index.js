@@ -1,1 +1,3 @@
-// Nothing here yet
+export default {
+  test: 'stuff'
+};

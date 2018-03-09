@@ -63,3 +63,5 @@ export default function UISwap({
     files.forEach(file => loadFile(`${base}/${defaultVersion}/${file}`));
   }
 }
+
+window.UISwap = UISwap;

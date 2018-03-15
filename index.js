@@ -1,16 +1,9 @@
-export function extractVersion(search = '') {
-  const result = search.match(/(\?|&)ui_version=(.+?)(&|$)/);
-
-  return {
-    search: result ? search.replace(result[0], result[3] && result[1]) : search,
-    version: result && result[2]
-  };
-}
+import extractVersion from './extractVersion';
 
 function createTag(src) {
   let tag;
 
-  if (src.endsWith('.css')) {
+  if (src.slice(-4) === '.css') {
     tag = document.createElement('link');
     tag.href = src;
     tag.rel = 'stylesheet';
@@ -23,14 +16,8 @@ function createTag(src) {
 }
 
 function loadFile(src) {
-  return new Promise((resolve, reject) => {
-    const tag = createTag(src);
-
-    tag.addEventListener('load', resolve, false);
-    tag.addEventListener('error', reject, false);
-
-    document.body.append(tag);
-  });
+  const tag = createTag(src);
+  document.body.appendChild(tag);
 }
 
 export default function UISwap({

@@ -1,6 +1,6 @@
 import test from 'ava';
 
-import UISwap, { extractVersion } from '.';
+import extractVersion from './extractVersion';
 
 test('should get version from query string', t => {
   t.falsy(extractVersion().version);

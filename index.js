@@ -15,8 +15,14 @@ function createTag(src) {
   return tag;
 }
 
-function loadFile(src) {
+function loadFile(src, cb) {
   const tag = createTag(src);
+
+  if (cb) {
+    tag.addEventListener('error', cb, false);
+    tag.addEventListener('load', e => cb(null, e), false);
+  }
+
   document.body.appendChild(tag);
 }
 
@@ -24,6 +30,7 @@ export default function UISwap({
   base,
   devBase,
   files,
+  fallbackVersion,
   defaultVersion = 'latest'
 }) {
   let { version: newVersion, search } = extractVersion(window.location.search);
@@ -47,7 +54,13 @@ export default function UISwap({
   } else if (devBase) {
     files.forEach(file => loadFile(`${devBase}/${file}`));
   } else {
-    files.forEach(file => loadFile(`${base}/${defaultVersion}/${file}`));
+    files.forEach(file => {
+      loadFile(`${base}/${defaultVersion}/${file})`, err => {
+        if (err) {
+          loadFile(`${base}/${fallbackVersion}/${file})`);
+        }
+      });
+    });
   }
 }
 

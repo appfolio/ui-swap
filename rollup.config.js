@@ -8,8 +8,8 @@ export default {
     format: 'iife',
     file:
       process.env.NODE_ENV === 'production'
-        ? 'dist/index.min.js'
-        : 'dist/index.js'
+        ? 'dist/UISwap.min.js'
+        : 'dist/UISwap.js'
   },
   plugins: [
     babel({

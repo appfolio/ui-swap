@@ -55,9 +55,9 @@ export default function UISwap({
     files.forEach(file => loadFile(`${devBase}/${file}`));
   } else {
     files.forEach(file => {
-      loadFile(`${base}/${defaultVersion}/${file})`, err => {
+      loadFile(`${base}/${defaultVersion}/${file}`, err => {
         if (err) {
-          loadFile(`${base}/${fallbackVersion}/${file})`);
+          loadFile(`${base}/${fallbackVersion}/${file}`);
         }
       });
     });

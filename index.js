@@ -1,4 +1,5 @@
 import extractVersion from './extractVersion';
+import processLoadEvents from './processLoadEvents';
 
 function createTag(src) {
   let tag;
@@ -19,8 +20,8 @@ function loadFile(src, cb) {
   const tag = createTag(src);
 
   if (cb) {
-    tag.addEventListener('error', cb, false);
-    tag.addEventListener('load', e => cb(null, e), false);
+    tag.addEventListener('error', processLoadEvents(cb, true), false);
+    tag.addEventListener('load', processLoadEvents(cb), false);
   }
 
   document.body.appendChild(tag);

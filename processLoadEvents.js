@@ -10,7 +10,11 @@ export default function processLoadEvents(callback, failed) {
 
     if (e.target.tagName === 'LINK') {
       try {
-        if (e.target.sheet && e.target.sheet.cssRules.length) {
+        if (
+          e.target.sheet &&
+          e.target.sheet.cssRules &&
+          e.target.sheet.cssRules.length
+        ) {
           callback(null, e); // Success
         } else {
           callback(e); // Failure

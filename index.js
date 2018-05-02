@@ -1,13 +1,11 @@
 import extractVersion from './extractVersion';
-import processLoadEvents from './processLoadEvents';
 
 function createTag(src) {
   let tag;
 
   if (src.slice(-4) === '.css') {
-    tag = document.createElement('link');
-    tag.href = src;
-    tag.rel = 'stylesheet';
+    tag = document.createElement('style');
+    tag.textContent = '@import "' + src + '"';
   } else {
     tag = document.createElement('script');
     tag.src = src;
@@ -20,8 +18,7 @@ function loadFile(src, cb) {
   const tag = createTag(src);
 
   if (cb) {
-    tag.addEventListener('error', processLoadEvents(cb, true), false);
-    tag.addEventListener('load', processLoadEvents(cb), false);
+    tag.addEventListener('error', cb, false);
   }
 
   document.body.appendChild(tag);
@@ -50,13 +47,11 @@ export default function UISwap({
 
   const version = sessionStorage.getItem('ui');
 
-  if (version) {
-    files.forEach(file => loadFile(`${base}/${version}/${file}`));
-  } else if (devBase) {
+  if (!version && devBase) {
     files.forEach(file => loadFile(`${devBase}/${file}`));
   } else {
     files.forEach(file => {
-      loadFile(`${base}/${defaultVersion}/${file}`, err => {
+      loadFile(`${base}/${version || defaultVersion}/${file}`, err => {
         if (err) {
           loadFile(`${base}/${fallbackVersion}/${file}`);
         }

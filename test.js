@@ -1,7 +1,6 @@
 import test from 'ava';
 
 import extractVersion from './extractVersion';
-import processLoadEvents from './processLoadEvents';
 
 test('extractVersion should get version from query string', t => {
   t.falsy(extractVersion().version);
@@ -42,12 +41,3 @@ test('extractVersion should extract version from query string', t => {
     '?first[]=param&first[]=param2'
   );
 });
-
-test('processLoadEvents should require callback', t => {
-  const error = t.throws(processLoadEvents);
-  t.is(error.message, 'Callback Not Defined');
-});
-
-test.todo('processLoadEvents should trigger error on error');
-test.todo('processLoadEvents should trigger error on load with error code');
-test.todo('processLoadEvents should trigger success on load with success code');

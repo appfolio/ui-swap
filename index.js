@@ -9,6 +9,7 @@ function createTag(src) {
   } else {
     tag = document.createElement('script');
     tag.src = src;
+    tag.crossOrigin = 'anonymous';
   }
 
   return tag;

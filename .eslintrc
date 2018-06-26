@@ -1,0 +1,18 @@
+{
+  "extends": ["prettier"],
+  "parser": "babel-eslint",
+  "rules": {
+    "arrow-parens": ["error", "as-needed"],
+    "comma-dangle": ["error", "never"],
+    "import/prefer-default-export": "off",
+    "max-len": ["error", { "code": 80, "tabWidth": 2 }],
+    "quotes": ["error", "single", { "avoidEscape": true }]
+  },
+  "globals": {
+    "sessionStorage": true,
+    "window": true
+  },
+  "settings": {
+    "import/resolver": "webpack"
+  }
+}

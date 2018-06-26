@@ -30,7 +30,7 @@ export default function UISwap({
   devBase,
   files,
   fallbackVersion,
-  defaultVersion = 'latest'
+  defaultVersion
 }) {
   let { version: newVersion, search } = extractVersion(window.location.search);
 
@@ -48,7 +48,10 @@ export default function UISwap({
 
   const version = sessionStorage.getItem('ui');
 
-  if (!version && devBase) {
+  const mayDev =
+    (!fallbackVersion && !defaultVersion) || version === 'localhost';
+
+  if (mayDev && devBase) {
     files.forEach(file => loadFile(`${devBase}/${file}`));
   } else {
     files.forEach(file => {

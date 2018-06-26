@@ -10,19 +10,26 @@
   "devDependencies": {
     "ava": "^1.0.0-beta.3",
     "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.5",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-minify": "^0.3.0",
     "babel-register": "^6.26.0",
+    "eslint": "^5.0.0",
+    "eslint-config-prettier": "^2.9.0",
     "rollup": "^0.56.5",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-uglify": "^3.0.0"
   },
   "scripts": {
-    "test": "ava",
-    "build": "NODE_ENV=production rollup -c"
+    "build": "NODE_ENV=production rollup -c",
+    "lint": "eslint --fix .",
+    "test": "ava"
   },
   "ava": {
-    "require": ["babel-register"]
-  }
+    "require": [
+      "babel-register"
+    ]
+  },
+  "dependencies": {}
 }

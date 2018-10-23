@@ -25,6 +25,17 @@ function loadFile(src, cb) {
   document.body.appendChild(tag);
 }
 
+var showedAlert = false;
+function oops(err) {
+  console.log('UISwap failed:', err);
+  if(!showedAlert)
+    alert(
+      "We're sorry; something went seriously wrong " +
+        'while loading the application.'
+    );
+  showedAlert = true;
+}
+
 export default function UISwap({
   base,
   devBase,
@@ -52,12 +63,13 @@ export default function UISwap({
     (!fallbackVersion && !defaultVersion) || version === 'localhost';
 
   if (mayDev && devBase) {
-    files.forEach(file => loadFile(`${devBase}/${file}`));
+    files.forEach(file => loadFile(`${devBase}/${file}`, oops));
   } else {
     files.forEach(file => {
       loadFile(`${base}/${version || defaultVersion}/${file}`, err => {
         if (err) {
-          loadFile(`${base}/${fallbackVersion}/${file}`);
+          sessionStorage.removeItem('ui');
+          loadFile(`${base}/${fallbackVersion}/${file}`, oops);
         }
       });
     });

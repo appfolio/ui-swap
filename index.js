@@ -19,21 +19,19 @@ function loadFile(src, cb) {
   const tag = createTag(src);
 
   if (cb) {
-    tag.addEventListener('error', cb, false);
+    const cbWithSrc = err => cb(src, err)
+    tag.addEventListener('error', cbWithSrc, false);
   }
 
   document.body.appendChild(tag);
 }
 
-var showedAlert = false;
-function oops(err) {
-  console.log('UISwap failed:', err);
-  if(!showedAlert)
-    alert(
-      "We're sorry; something went seriously wrong " +
-        'while loading the application.'
-    );
-  showedAlert = true;
+function oops(src, err) {
+  if(src.slice(-3) === '.js') {
+    console.error('UISWap: Cannot load', src, 'due to', err);
+    // promote reliability on reload
+    sessionStorage.removeItem('ui');
+  }
 }
 
 export default function UISwap({
@@ -54,7 +52,8 @@ export default function UISwap({
 
     window.history.replaceState({}, null, updatedURL);
 
-    sessionStorage.setItem('ui', newVersion);
+    if(newVersion && newVersion !== '')
+      sessionStorage.setItem('ui', newVersion);
   }
 
   const version = sessionStorage.getItem('ui');
@@ -67,10 +66,8 @@ export default function UISwap({
   } else {
     files.forEach(file => {
       loadFile(`${base}/${version || defaultVersion}/${file}`, err => {
-        if (err) {
-          sessionStorage.removeItem('ui');
+        if (err)
           loadFile(`${base}/${fallbackVersion}/${file}`, oops);
-        }
       });
     });
   }

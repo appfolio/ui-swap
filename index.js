@@ -1,4 +1,8 @@
-import extractVersion from './extractVersion';
+import consumeQueryParam from './consumeQueryParam';
+
+let logDebug = () => undefined;
+const logInfo = console.log;
+const logError = console.error;
 
 function createTag(src) {
   let tag;
@@ -19,18 +23,24 @@ function loadFile(src, cb) {
   const tag = createTag(src);
 
   if (cb) {
-    const cbWithSrc = err => cb(src, err)
+    const cbWithSrc = err => cb(err, src)
     tag.addEventListener('error', cbWithSrc, false);
   }
 
   document.body.appendChild(tag);
 }
 
-function oops(src, err) {
-  if(src.slice(-3) === '.js') {
-    console.error('UISWap: Cannot load', src, 'due to', err);
-    // promote reliability on reload
-    sessionStorage.removeItem('ui');
+function handleResult(err, src) {
+  if(err) {
+    if(src.slice(-3) === '.js') {
+      logInfo('UISwap: JavaScript source failed to load; clearing ui_version for next reload');
+      // promote reliability on reload
+      sessionStorage.removeItem('ui');
+    } else {
+      logDebug('UISwap: Cannot load', src);
+    }
+  } else {
+    logDebug('UISwap: Loaded', src);
   }
 }
 
@@ -41,33 +51,31 @@ export default function UISwap({
   fallbackVersion,
   defaultVersion
 }) {
-  let { version: newVersion, search } = extractVersion(window.location.search);
+  const newVersion = consumeQueryParam(window.location, 'ui_version')
+  if(newVersion && newVersion !== '')
+    sessionStorage.setItem('ui', newVersion);
 
-  if (newVersion) {
-    const updatedURL = [
-      window.location.origin,
-      window.location.pathname,
-      search
-    ].join('');
+  const debugSelf = consumeQueryParam(window.location, 'ui_swap')
+  if(debugSelf)
+    logDebug = logInfo;
 
-    window.history.replaceState({}, null, updatedURL);
-
-    if(newVersion && newVersion !== '')
-      sessionStorage.setItem('ui', newVersion);
-  }
-
-  const version = sessionStorage.getItem('ui');
+  const version = sessionStorage.getItem('ui') || defaultVersion;
 
   const mayDev =
     (!fallbackVersion && !defaultVersion) || version === 'localhost';
 
   if (mayDev && devBase) {
-    files.forEach(file => loadFile(`${devBase}/${file}`, oops));
+    logDebug('UISwap: using devBase')
+    files.forEach(file => loadFile(`${devBase}/${file}`, handleResult));
   } else {
+    logDebug('UISwap: using base')
     files.forEach(file => {
-      loadFile(`${base}/${version || defaultVersion}/${file}`, err => {
-        if (err)
-          loadFile(`${base}/${fallbackVersion}/${file}`, oops);
+      loadFile(`${base}/${version}/${file}`, err => {
+        if (err) {
+          handleResult(err, file)
+          logInfo(`UISwap: fallback to ${fallbackVersion}`)
+          loadFile(`${base}/${fallbackVersion}/${file}`, handleResult);
+        }
       });
     });
   }

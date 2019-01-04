@@ -53,7 +53,7 @@ export default function UISwap({
 }) {
   const newVersion = consumeQueryParam(window.location, 'ui_version')
   if(newVersion && newVersion !== '')
-    sessionStorage.setItem('ui', newVersion);
+    sessionStorage.setItem('ui', 'branches/' + newVersion);
 
   const debugSelf = consumeQueryParam(window.location, 'ui_swap')
   if(debugSelf)

@@ -23,7 +23,7 @@ function loadFile(src, cb) {
   const tag = createTag(src);
 
   if (cb) {
-    const cbWithSrc = err => cb(err, src)
+    const cbWithSrc = err => cb(err, src);
     tag.addEventListener('error', cbWithSrc, false);
   }
 
@@ -31,9 +31,11 @@ function loadFile(src, cb) {
 }
 
 function handleResult(err, src) {
-  if(err) {
-    if(src.slice(-3) === '.js') {
-      logInfo('UISwap: JavaScript source failed to load; clearing ui_version for next reload');
+  if (err) {
+    if (src.slice(-3) === '.js') {
+      logInfo(
+        'UISwap: JavaScript source failed to load; clearing ui_version for next reload'
+      );
       // promote reliability on reload
       sessionStorage.removeItem('ui');
     } else {
@@ -51,13 +53,12 @@ export default function UISwap({
   fallbackVersion,
   defaultVersion
 }) {
-  const newVersion = consumeQueryParam(window.location, 'ui_version')
-  if(newVersion && newVersion !== '')
+  const newVersion = consumeQueryParam(window.location, 'ui_version');
+  if (newVersion && newVersion !== '')
     sessionStorage.setItem('ui', 'branches/' + newVersion);
 
-  const debugSelf = consumeQueryParam(window.location, 'ui_swap')
-  if(debugSelf)
-    logDebug = logInfo;
+  const debugSelf = consumeQueryParam(window.location, 'ui_swap');
+  if (debugSelf) logDebug = logInfo;
 
   const version = sessionStorage.getItem('ui') || defaultVersion;
 
@@ -65,15 +66,15 @@ export default function UISwap({
     (!fallbackVersion && !defaultVersion) || version === 'localhost';
 
   if (mayDev && devBase) {
-    logDebug('UISwap: using devBase')
+    logDebug('UISwap: using devBase');
     files.forEach(file => loadFile(`${devBase}/${file}`, handleResult));
   } else {
-    logDebug('UISwap: using base')
+    logDebug('UISwap: using base');
     files.forEach(file => {
       loadFile(`${base}/${version}/${file}`, err => {
         if (err) {
-          handleResult(err, file)
-          logInfo(`UISwap: fallback to ${fallbackVersion}`)
+          handleResult(err, file);
+          logInfo(`UISwap: fallback to ${fallbackVersion}`);
           loadFile(`${base}/${fallbackVersion}/${file}`, handleResult);
         }
       });

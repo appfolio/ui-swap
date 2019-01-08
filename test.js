@@ -1,4 +1,4 @@
-import { getSessionValueFromQueryParamValue } from './';
+import getSessionValueFromQueryParamValue from './getSessionValueFromQueryParamValue';
 
 describe('getSessionValueFromQueryParamValue', () => {
   it('appends `branches/`', () => {

@@ -1,7 +1,5 @@
 import consumeQueryParam from './consumeQueryParam';
-
-export const getSessionValueFromQueryParamValue = newVersion =>
-  newVersion === 'localhost' ? 'localhost' : 'branches/' + newVersion;
+import getSessionValueFromQueryParamValue from './getSessionValueFromQueryParamValue';
 
 let logDebug = () => undefined;
 const logInfo = console.log;

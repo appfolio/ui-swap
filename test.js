@@ -1,13 +1,15 @@
-import { getSessionValueFromUrlParam } from '.';
+import { getSessionValueFromQueryParamValue } from './';
 
-describe('getSessionValueFromUrlParam', () => {
+describe('getSessionValueFromQueryParamValue', () => {
   it('appends `branches/`', () => {
-    expect(getSessionValueFromUrlParam('branchName')).toEqual(
+    expect(getSessionValueFromQueryParamValue('branchName')).toEqual(
       'branches/branchName'
     );
   });
 
   it('does not append `branches/` to `localhost`', () => {
-    expect(getSessionValueFromUrlParam('localhost')).toEqual('localhost');
+    expect(getSessionValueFromQueryParamValue('localhost')).toEqual(
+      'localhost'
+    );
   });
 });

@@ -1,6 +1,6 @@
 import consumeQueryParam from './consumeQueryParam';
 
-export const getSessionValueFromUrlParam = newVersion =>
+export const getSessionValueFromQueryParamValue = newVersion =>
   newVersion === 'localhost' ? 'localhost' : 'branches/' + newVersion;
 
 let logDebug = () => undefined;
@@ -58,7 +58,10 @@ export default function UISwap({
 }) {
   const newVersion = consumeQueryParam(window.location, 'ui_version');
   if (newVersion && newVersion !== '')
-    sessionStorage.setItem('ui', getSessionValueFromUrlParam(newVersion));
+    sessionStorage.setItem(
+      'ui',
+      getSessionValueFromQueryParamValue(newVersion)
+    );
 
   const debugSelf = consumeQueryParam(window.location, 'ui_swap');
   if (debugSelf) logDebug = logInfo;
